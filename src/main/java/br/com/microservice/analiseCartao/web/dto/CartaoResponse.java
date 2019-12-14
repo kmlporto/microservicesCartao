@@ -1,4 +1,4 @@
-package br.com.microservice.analiseCartao.web.resource;
+package br.com.microservice.analiseCartao.web.dto;
 
 import lombok.Data;
 
