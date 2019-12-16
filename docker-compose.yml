@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  analise:
+    build: .
+    ports:
+    - 8080:8080
+    networks:
+      - microservices
+
+networks:
+  microservices:
+    external:
+      name: network_microservices

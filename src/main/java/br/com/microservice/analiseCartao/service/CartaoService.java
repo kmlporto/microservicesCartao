@@ -16,19 +16,20 @@ public class CartaoService {
 
         ConnectionFactory connectionFactory = new ConnectionFactory();
         String EXCHANGE_NAME = "embossing";
-
+        String ROUTING_KEY = cartaoRequest.getEntregaLoja() ? "processing": "send";
+        BuiltinExchangeType EXCHANGE_TYPE = BuiltinExchangeType.DIRECT;
         //localizacao do gestor da fila (Queue Manager)
-        connectionFactory.setHost("localhost");
+        connectionFactory.setHost("rabbitmq");
         connectionFactory.setPort(5672);
         try {
             Connection connection = connectionFactory.newConnection();
 
             Channel channel = connection.createChannel();
-            channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.DIRECT);
-
+            channel.exchangeDeclare(EXCHANGE_NAME, EXCHANGE_TYPE);
             Gson gson = new Gson();
             String mensagem = gson.toJson(cartaoRequest);
-            channel.basicPublish(EXCHANGE_NAME, "", null, mensagem.getBytes());
+            channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY, null, mensagem.getBytes());
+            System.out.println("Produção realizada na ROUTING_KEY " + ROUTING_KEY);
             return true;
         } catch (Exception e) {
             return false;
